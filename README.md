@@ -1,14 +1,15 @@
 # Blender Batch Renderer
 
-This script automates the process of standardizing, scaling, and rendering objects in Blender. It ensures objects fit within the camera view, applies a 3-point lighting setup, and generates renders at multiple resolutions (1024px, 512px, 256px, 128px and 64px).
+This script automates the process of standardizing, scaling, and rendering objects in Blender with videogame icon generation in mind. It ensures objects fit within the camera view, applies a 3-point lighting setup (if no lights exist), and generates renders at multiple resolutions (1024px, 512px, 256px, 128px and 64px).
 
 ## Usage
 
 1. Place your objects in a collection named **"Target"**.
-2. Run the script in Blender's scripting editor.
-3. The script will:
+3. Run the script in Blender's scripting editor.
+4. The script will:
    - Standardize object transformations
-   - Set up a camera and lighting
+   - Set up a camera
+   - Automatically add 3-point lighting **only if no lights exist** (if you add your own lights, the script will respect them)
    - Render each object at multiple resolutions
    - Save renders in the `Icons` folder
 
@@ -21,12 +22,15 @@ graph TD
     C -- Exists --> D[Standardize Objects]
     C -- Not Found --> X[Exit]
     D --> E[Create Setup Collection]
-    E --> F[Add Camera & Lights]
-    F --> G[Set Camera as Active]
-    G --> H[Create Icons Folder]
-    H --> I[Loop Through Objects]
-    I --> J[Render at Each Resolution]
-    J --> K[Save Icons]
-    K --> Z[Finish]
+    E --> F[Add Camera]
+    F --> G{Lights Exist?}
+    G -- Yes --> H[Skip Light Creation]
+    G -- No --> I[Add 3-Point Lights]
+    H & I --> J[Set Camera as Active]
+    J --> K[Create Icons Folder]
+    K --> L[Loop Through Objects]
+    L --> M[Render at Each Resolution]
+    M --> N[Save Icons]
+    N --> Z[Finish]
 ```
 
